@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>sharkztech</title>
+	
+	<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+	<div class="header">{{ other_user.username }}</div>
+	<div class="messages-area">
+		{% for message in messages %}
+		<div class="message	{% if message.sender == request.user %}right{%else%}left{% endif %}">
+			<div class="sent-by">{{message.sender.username }}</div>
+			<div class="content">{{message.message}}</div>
+		</div>
+		{% endfor %}		
+	</div>
+	<div class="input-area">
+		<input type="text" name="text" id="message-input">
+		<button id="send-btn">Send</button>
+		
+	</div>
+
+	<script type="text/javascript">
+		let message_sent_btn=document.getElementById('send-btn');
+		let message_input=document.getElementById('message-input');
+
+		function send_message(){
+			let message=message_input.value;
+			if(message ===" "){
+				return;
+			}message_input.value=" ";
+
+		fetch("{% url 'chatroom-ajax' other_user.id %}",{
+            method:"POST",
+            credentials:'same-origin',
+   	         headers:{
+            	"Content-Type":'application/json',
+            	'X-CSRFToken':'{{ csrf_token }}',
+            },
+                body:JSON.stringify(message)
+			}).then(e=>e.json()).then(messages=>{
+				for(message of messages){
+					construct_mesage(message);
+					console.log("sending.....")
+					console.log(message)
+				}
+			});
+		}
+		
+		function load_message(){		
+		fetch("{% url 'chatroom-ajax' other_user.id %}").then(e=>e.json()).then(messages=>{
+			for(message of messages){
+				construct_mesage(message);
+				console.log("loading....")
+				console.log(message)
+			}
+		});
+	}
+
+	function construct_mesage(message) {
+		let messages_container=document.querySelector('.messages-area');
+		let class_name="left";
+		if(message.sent){
+			class_name="right";
+		}
+		let div=document.createElement("div");
+		div.classList.add ("message", class_name);
+		div.innerHTML=`
+		<div class="sent-by">${message.sender }</div>
+		<div class="content">${message.message}</div>
+		`
+		messages_container.appendChild(div);
+		div.scrollIntoView()
+	}
+
+		message_sent_btn.addEventListener('click',send_message);
+		setInterval(load_message,5000)
+	</script>
+</body>
+</html>

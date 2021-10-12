@@ -1,0 +1,57 @@
+*{
+			border:0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		body{
+			display: flex;
+			height: 100vh;
+			background-color: #666;
+			flex-direction: column;
+		}
+		.header{
+			padding: 10px 5%;
+			background-color: #444;
+			color: #888;
+			font-size: 1.5rem;
+			font-weight: 600;
+		}
+		.messages-area{
+			height: 100%;
+			min-height: 70vh;
+			overflow-y: auto;
+			padding: 4%;
+			background-color: #555;
+			color: #999;
+			padding-bottom: 10px;
+		}
+		.input-area{
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+		}
+		#message-input{
+			padding: 20px;
+			width: 100%;
+			font-size: 1.2rem;
+		}
+		#send-btn{
+			padding: 20px 40px;
+			background-color: gold;
+			font-size: 1.2rem;
+		}
+		.message.left{
+			text-align: left;
+			color: #aaa;
+		}
+		.message.right{
+			text-align: right;
+			color: #ccc;
+		}
+		.message .content{
+			background-color: #444;
+			padding: 5px 15px;
+			border-radius: 10px;
+			max-width: 80%;
+			display: inline-block;
+		}
